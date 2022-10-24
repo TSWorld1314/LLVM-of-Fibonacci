@@ -9,9 +9,10 @@ LLVM version is 14.0.6.
 
 First you should set LLVM_DIR as your llvm project of build folder of lib folder of cmake folder.
 
-Like this:
-    `set(LLVM_DIR "D:/llvm-project-14.0.6.src/build/lib/cmake/llvm")`
+    Like this:
+        `set(LLVM_DIR "D:/llvm-project-14.0.6.src/build/lib/cmake/llvm")`
 in your CMakeLists.txt.
+
 Second you should build this project:
 ```
     cd Fibonacci
