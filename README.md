@@ -9,10 +9,11 @@ First you should set LLVM_DIR as your llvm project of build folder of lib folder
     set(LLVM_DIR "D:/llvm-project-14.0.6.src/build/lib/cmake/llvm")
 in your CMakeLists.txt.
 Second you should build this project:
+```
     cd Fibonacci
     mkdir build
     cd build
     cmake ..
     cmake --build .
-
+```
 This will output the executable Fibonacci.exe in build folder.
