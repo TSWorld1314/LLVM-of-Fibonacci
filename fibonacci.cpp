@@ -46,6 +46,11 @@
 #include <string>
 #include <vector>
 
+// Optimizations Zero 
+#include "llvm/Transforms/Scalar.h"
+#include "llvm/Analysis/BasicAliasAnalysis.h"
+// Zero
+
 using namespace llvm;
 
 static Function *CreateFibFunction(Module *M, LLVMContext &Context) {
@@ -104,6 +109,17 @@ int main(int argc, char **argv) {
 
   InitializeNativeTarget();
   InitializeNativeTargetAsmPrinter();
+
+  /*Zero:
+  LLVMContext is an important class for using LLVM in a threaded context. 
+  It (opaquely) owns and manages the core "global" data of LLVM's core infrastructure, 
+  including the type and constant uniquing tables.
+
+  Since it says "opaquely" you're not supposed to know what it contains, 
+  what it does or what's used for. 
+  Just think of it as a reference to the core LLVM "engine" that you should pass to the various methods that require a LLVMContext.
+  edit: just to clarify: no, it doesn't contain things such as bitsize - those are defined in TargetData.
+  */
   LLVMContext Context;
 
   // Create some module to put our function into it.
@@ -113,10 +129,21 @@ int main(int argc, char **argv) {
   // We are about to create the "fib" function:
   Function *FibF = CreateFibFunction(M, Context);
 
+  /*Zero*/
+  llvm::TargetOptions Opts;
+
   // Now we going to create JIT
   std::string errStr;
+
+  /*Zero:Create JIT engine*/
+  llvm::EngineBuilder factory(std::move(Owner));
+  factory.setEngineKind(llvm::EngineKind::JIT);
+  factory.setTargetOptions(Opts);
+  factory.setOptLevel(CodeGenOpt::Aggressive);
+
   ExecutionEngine *EE =
-    EngineBuilder(std::move(Owner))
+    //Zero:EngineBuilder(std::move(Owner))
+    factory
     .setErrorStr(&errStr)
     .create();
 
