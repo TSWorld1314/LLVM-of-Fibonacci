@@ -45,13 +45,16 @@
 #include <memory>
 #include <string>
 #include <vector>
-
+#include <chrono>
+#include <iostream>
 // Optimizations Zero 
 #include "llvm/Transforms/Scalar.h"
 #include "llvm/Analysis/BasicAliasAnalysis.h"
 // Zero
 
 using namespace llvm;
+using namespace std;
+using namespace std::chrono;
 
 static Function *CreateFibFunction(Module *M, LLVMContext &Context) {
   // Create the fib function and insert it into module M. This function is said
@@ -110,6 +113,7 @@ int main(int argc, char **argv) {
   InitializeNativeTarget();
   InitializeNativeTargetAsmPrinter();
 
+  auto start = high_resolution_clock::now();
   /*Zero:
   LLVMContext is an important class for using LLVM in a threaded context. 
   It (opaquely) owns and manages the core "global" data of LLVM's core infrastructure, 
@@ -170,6 +174,9 @@ int main(int argc, char **argv) {
 
   // import result of execution
   outs() << "Result: " << GV.IntVal << "\n";
-
+  auto stop = high_resolution_clock::now();
+  auto duration = duration_cast<microseconds>(stop - start);
+  cout << "Time taken by function: "
+         << duration.count()/1000 << " millisecond" << endl;
   return 0;
 }
